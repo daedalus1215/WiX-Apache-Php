@@ -14,7 +14,7 @@ There are a few things to note to get it to work.
 1. You first need to create GUIDs for everything, for the ````UpgradeCode````, ````Component````.
 2. Will need to download the Apache source files and Php source files, then paste them into the wix project's directory. 
 3. Then when we have the Apache/Php source files we must heat them up to create 2 ````.wxs```` files that will be ````referenced```` in the WiX project. 
-    3.1 In order to bake Apache with the appropriate references to installation directories and component IDs for feature references I ran:
+3.1 In order to bake Apache with the appropriate references to installation directories and component IDs for feature references I ran:
 ````
 	heat.exe dir "Apache" -dr ApplicationApacheDirectory -cg ApacheFilesGroup -gg -g1 -sf -srd -out ".\ApacheFile.wxs" -sreg suppress registry harvesting
 ````

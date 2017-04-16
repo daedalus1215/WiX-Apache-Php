@@ -85,8 +85,6 @@
       <ComponentRef      Id="evApache" />
     
       <ComponentGroupRef Id="PhpFilesGroup" />
-      <ComponentRef      Id="evPhpExtRemove" />
-      <ComponentRef      Id="evPhpRemove" />
       <ComponentRef      Id="evPhpExt"/>
       <ComponentRef      Id="evPhp"/>
 		</Feature>		

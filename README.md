@@ -26,4 +26,4 @@ There are a few things to note to get it to work.
 7. Open up ````PhpFile.wxs```` and replace all references to ````SourceDir```` with ````requisites\php````. That way we are linking to all the files and directories we need during the build of the ````.msi````.
 8. Copy over your newly adjusted .wxs files (#6, #7) and move them onto the same level as ````Product.wxs````. 
 9. Within Visual Studio right click on the project, in Solution Explorer, and add existing file to project and add the two aforementioned files. 
-10. If we want the two fragments, that install and start http service, then make sure we grab the directory ID of Apache's bin directory in the ````ApacheFile.wxs````, and paste it into the two fragments that install and start the http service respectively.
+10. If we want the two fragments, that install and start http service, then make sure we grab the directory ID of Apache's bin directory in the ````ApacheFile.wxs````, and paste it into the two fragments that install and start the http service respectively. Otherwise comment out their scope inclusion in the ````Feature```` element.

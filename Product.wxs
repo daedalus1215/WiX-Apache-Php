@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="ApachePhpService" Language="1033" Version="1.0.0.0" Manufacturer="LA" UpgradeCode="">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+		  <Directory Id="ApplicationRootDirectory" Name="Programming">
+			  <Directory Id="ApplicationApacheDirectory" Name="Apache" />
+      <Directory Id="ApplicationPhpDirectory" Name="Php" />
+		  </Directory>
+	  </Directory>
+
+
+    
+    <!-- Create Link our environment variable to PATH environment variable. -->
+    <Component Id="evProgramming"
+               Guid=""
+               Directory="ApplicationRootDirectory">
+      <CreateFolder/>
+    <Environment Id="addProgrammingEnvironmentVariable"
+                 Name="PATH"
+                 Value="%PROGRAMMING%"
+                 Permanent="no"
+                 Action="set"
+                 System="yes"
+                 Part="last"/>
+    </Component>    
+
+    <!-- Create Apache value in  environment variable -->
+    <Component Id="evApache"
+               Guid=""
+               Directory="ApplicationRootDirectory">
+      <CreateFolder/>
+      <Environment Id="addevApache" 
+                   Name="PROGRAMMING" 
+                   Value="C:\Programming\Apache\bin"
+                   Permanent="no"
+                   Action="set"
+                   System="yes"
+                   Part="last"/>
+    </Component>
+
+
+    <!-- Create Php value in environment variable for C:\Php -->
+    <Component Id="evPhp"
+               Guid=""
+               Directory="ApplicationRootDirectory">
+      <CreateFolder/>
+      <Environment 
+                  Id="addPhpEnvVar" 
+                  Name="PROGRAMMING"
+                  Value="C:\Programming\Php"
+                  Permanent="no"
+                  Action="set"
+                  System="yes"
+                  Part="last"/>
+    </Component>
+    
+    <!-- Create value in environment variable  for C:\Php\ext -->
+    <Component Id="evPhpExt"
+               Guid=""
+               Directory="ApplicationRootDirectory">
+      <CreateFolder/>
+      <Environment
+                  Id="addPhpExtEnvVar"
+                  Name="PROGRAMMING"
+                  Value="C:\Programming\Php\ext"
+                  Permanent="no"
+                  Action="set"
+                  System="yes"
+                  Part="last"/>
+    </Component>
+    
+      
+    
+   
+    <!-- Main installation beginning. -->
+		<Feature Id="MainFeature" Title="ApachePhpService" Level="1">
+      <ComponentRef      Id="evProgramming"/>
+      
+			<ComponentGroupRef Id="ApacheFilesGroup" />
+      <ComponentRef      Id="evApache" />
+    
+      <ComponentGroupRef Id="PhpFilesGroup" />
+      <ComponentRef      Id="evPhpExtRemove" />
+      <ComponentRef      Id="evPhpRemove" />
+      <ComponentRef      Id="evPhpExt"/>
+      <ComponentRef      Id="evPhp"/>
+		</Feature>		
+  
+    <!-- Install httpd service -->
+    <InstallExecuteSequence >
+      <!-- Remove httpd services -->
+      <Custom Action="stopApacheService" Before="StopServices">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="removeApacheService" After="stopApacheService">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      
+      <!-- Install then Start httpd service. -->
+      <Custom Action="installHttpService" After="InstallInitialize"/>
+      <Custom Action="startHttpService" After="installHttpService"/>
+    </InstallExecuteSequence>         
+	</Product>
+  
+  
+
+  
+  <!-- SERVICES -->  
+  
+  <!-- Uninstall httpd (Apache service)-->
+  <Fragment>
+    <CustomAction Id="stopApacheService"
+                  Directory="ApplicationRootDirectory"
+                  Execute="immediate"
+                  ExeCommand="cmd.exe /C httpd -k stop"
+                  Return="ignore"/>
+  </Fragment>
+    
+  <Fragment>
+    <CustomAction Id="removeApacheService"
+                  Directory="ApplicationRootDirectory"
+                  Execute="immediate"
+                  ExeCommand="cmd.exe /C httpd -k uninstall"
+                  Return="ignore"/>
+  </Fragment>
+
+  <!-- for Directory attribute input the Apache bin directory's ID  -->
+  
+  <!-- Installing httpd (Apache service) -->    
+  <Fragment>
+    <CustomAction Id="installHttpService"
+                  Directory=""
+                  Execute="commit"
+                  Impersonate="no"
+                  ExeCommand="cmd.exe /C C:\Programming\Apache\bin\httpd.exe -k install"
+                  Return="ignore"
+                  />
+  </Fragment>
+  
+  <Fragment>
+    <CustomAction Id="startHttpService"
+                  Directory=""
+                  Execute="commit"
+                  Impersonate="no"                  
+                  ExeCommand="cmd.exe /C C:\Programming\Apache\bin\httpd.exe -k start"
+                  Return="ignore" />
+  </Fragment>
+</Wix>
